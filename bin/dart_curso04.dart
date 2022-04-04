@@ -1,7 +1,7 @@
-// Objetivos do projeto na Aula 02:
-// 1 - Criar classe Movie para representar nossos filmes
-// 2 - Indagar-se a questão: "Como registrar e ler um objeto de forma textual?"
-// 3 - Usar o JSON para gravar um filme no arquivo
+// Objetivos do projeto na Aula 04:
+// 1 - Refatorar o código
+// 2 - Criar classe FileManager
+// 3 - Criar
 
 // Explicar o que é isso
 import 'dart:io';
@@ -92,61 +92,4 @@ saveMovie() {
   }
 }
 
-saveMovieFile(Movie movie) {
-  // Definir um diretório -> Gancho para instalar o path
-  Directory directory = Directory.current;
-
-  // Definir um novo arquivo
-  String filePath = path.join(directory.path, "my_movies.json");
-
-  // Abrir o arquivo no File
-  File file = File(filePath);
-
-  // Salvar qualquer coisa
-  file.writeAsString(movie.toJson());
-
-  print("Filme adicionado com sucesso!");
-}
-
-loadMovies() async {
-  print("Mostrar lista de filmes.");
-
-  // Definir um diretório -> Gancho para instalar o path
-  Directory directory = Directory.current;
-
-  // Definir um novo arquivo
-  String filePath = path.join(directory.path, "my_movies.json");
-
-  // Abrir o arquivo no File
-  File file = File(filePath);
-
-  // Ler do arquivo - Gera um erro por causa do Future
-  // String minhaString = file.readAsString();
-  // print(minhaString);
-
-  Future<String> minhaFuturaString = file.readAsString();
-  minhaFuturaString.then((value) {
-    print(value);
-  });
-  print("Aconteceu primeiro."); // Explicar pq isso é executado primeiro.
-
-  await readFromFile(file);
-
-  //Teria que transformar a main em async
-  //String value = readFromFileGetString(file);
-}
-
-readFromFile(File file) async {
-  String value = await file.readAsString();
-  print(value);
-  print("Aconteceu primeiro, ou será que não?");
-}
-
-// Sobre o retorno e funções assíncronas
-// String readFromFileGetString(File file) async{
-//   return await file.readAsString();
-// }
-// Funções assíncronas exigem Future
-Future<String> readFromFileGetString(File file) async {
-  return await file.readAsString();
-}
+loadMovies() async {}
