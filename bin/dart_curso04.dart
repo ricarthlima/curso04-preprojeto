@@ -13,40 +13,46 @@ import 'models/movie.dart';
 
 void main() {
   print("| Catálogo de Filmes da Dandara |");
+  printMenu();
+}
 
+printMenu() async {
   bool continueLoop = true;
-  while (continueLoop) {
-    print("\nO que deseja fazer a seguir?"); // Explicar a quebra de linha.
-    print("1 - Adicionar filme ao catálogo");
-    print("2 - Ver catálogo completo");
-    print("0 - Sair");
-    String? input = stdin.readLineSync();
-    if (input != null) {
-      switch (input) {
-        case "1":
-          {
-            saveMovie();
-            break;
-          }
-        case "2":
-          {
-            loadMovies();
-            break;
-          }
-        case "0":
-          {
-            continueLoop = false;
-            break;
-          }
-        default:
-          {
-            print("Comando incorreto.");
-            break;
-          }
-      }
-    } else {
-      print("Comando incorreto.");
+
+  print("\nO que deseja fazer a seguir?"); // Explicar a quebra de linha.
+  print("1 - Adicionar filme ao catálogo");
+  print("2 - Ver catálogo completo");
+  print("0 - Sair");
+  String? input = stdin.readLineSync();
+  if (input != null) {
+    switch (input) {
+      case "1":
+        {
+          await saveMovie();
+          break;
+        }
+      case "2":
+        {
+          await loadMovies();
+          break;
+        }
+      case "0":
+        {
+          continueLoop = false;
+          break;
+        }
+      default:
+        {
+          print("Comando incorreto.");
+          break;
+        }
     }
+  } else {
+    print("Comando incorreto.");
+  }
+
+  if (continueLoop) {
+    printMenu();
   }
 }
 
@@ -97,11 +103,50 @@ saveMovieFile(Movie movie) {
   File file = File(filePath);
 
   // Salvar qualquer coisa
-  file.writeAsStringSync(movie.toJson());
+  file.writeAsString(movie.toJson());
 
   print("Filme adicionado com sucesso!");
 }
 
-loadMovies() {
+loadMovies() async {
   print("Mostrar lista de filmes.");
+
+  // Definir um diretório -> Gancho para instalar o path
+  Directory directory = Directory.current;
+
+  // Definir um novo arquivo
+  String filePath = path.join(directory.path, "my_movies.json");
+
+  // Abrir o arquivo no File
+  File file = File(filePath);
+
+  // Ler do arquivo - Gera um erro por causa do Future
+  // String minhaString = file.readAsString();
+  // print(minhaString);
+
+  Future<String> minhaFuturaString = file.readAsString();
+  minhaFuturaString.then((value) {
+    print(value);
+  });
+  print("Aconteceu primeiro."); // Explicar pq isso é executado primeiro.
+
+  await readFromFile(file);
+
+  //Teria que transformar a main em async
+  //String value = readFromFileGetString(file);
+}
+
+readFromFile(File file) async {
+  String value = await file.readAsString();
+  print(value);
+  print("Aconteceu primeiro, ou será que não?");
+}
+
+// Sobre o retorno e funções assíncronas
+// String readFromFileGetString(File file) async{
+//   return await file.readAsString();
+// }
+// Funções assíncronas exigem Future
+Future<String> readFromFileGetString(File file) async {
+  return await file.readAsString();
 }
